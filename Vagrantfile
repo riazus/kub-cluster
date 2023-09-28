@@ -7,18 +7,19 @@ Vagrant.configure("2") do |config|
       apt-get -y install net-tools
     SHELL
   
-    config.vm.define "evlasovS"
-    config.vm.hostname = "evlasovS"
+    config.vm.define "jannabelS"
+    config.vm.hostname = "jannabelS"
     config.vm.network "private_network", ip: "192.168.56.110"
     config.vm.provision "file", source: "confs/deployment.yaml", destination: "/tmp/deployment.yaml"
     config.vm.provision "file", source: "confs/app1", destination: "/tmp/app1"
     config.vm.provision "file", source: "confs/app2", destination: "/tmp/app2"
     config.vm.provision "file", source: "confs/app3", destination: "/tmp/app3"
     config.vm.provider "virtualbox" do |v|
-      v.name = "evlasovS"
+      v.name = "jannabelS"
       v.memory = 2048
       v.cpus = 2
     end
+    
     config.vm.provision "shell", inline: <<-SHELL
       echo "127.0.1.1 $(hostname)" >> /etc/hosts
       sudo ip link add eth1 type dummy
@@ -40,9 +41,7 @@ Vagrant.configure("2") do |config|
   
       /usr/local/bin/kubectl create configmap app-one-html --from-file /home/vagrant/app1/index.html --namespace=kube-system
       /usr/local/bin/kubectl create configmap app-two-html --from-file /home/vagrant/app2/index.html --namespace=kube-system
-  
       /usr/local/bin/kubectl create configmap app-three-html --from-file /home/vagrant/app3/index.html --namespace=kube-system
-  
   
       /usr/local/bin/kubectl apply -f /home/vagrant/deployment.yaml
     SHELL
